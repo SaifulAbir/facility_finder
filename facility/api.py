@@ -1,14 +1,16 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from facility.models import School, SocialWork, YouthCareer, Daycare
-from facility.serializers import SchoolListSerializer, YouthCareerListSerializer, DaycareListSerializer
+from facility.serializers import SchoolListSerializer, YouthCareerListSerializer, DaycareListSerializer, \
+    SocialWorkListSerializer
 
 
 class FeatureListAPIView(APIView):
 
     def get(self, request):
         feature_dict = {"school_list": None, "social_work_list": None, "youth_career_list": None, "daycare_list": None}
-        category_list = request.GET.getlist("category")
+        category_list = request.GET.getlist("category[]")
+        print(category_list)
 
         for category in category_list:
             if category == "Schulen":
@@ -23,7 +25,7 @@ class FeatureListAPIView(APIView):
 
             if category == "Schulsozialarbeit":
                 social_works = SocialWork.objects.all()
-                social_work_serializer = SchoolListSerializer(social_works, many=True)
+                social_work_serializer = SocialWorkListSerializer(social_works, many=True)
                 feature_dict["social_work_list"] = social_work_serializer.data
 
             if category == "Jugendberufshilfen":
