@@ -1,7 +1,6 @@
 import json
 import os
 from django.conf import settings
-
 from facility.models import School, SocialWork, YouthCareer, Daycare
 
 
@@ -47,7 +46,7 @@ def run():
                             lat=lat, long=long)
         school_obj.save()
 
-    print("Successfully inserted school")
+    print("Schulen data successfully inserted")
 
     with open(os.path.join(settings.BASE_DIR, 'dataset/Schulsozialarbeit.geojson')) as f:
         data_list = json.load(f)
@@ -74,7 +73,7 @@ def run():
                                      telefon=telefon, fax=fax, email=email, lat=lat, long=long)
         social_work_obj.save()
 
-    print("Successfully inserted social work")
+    print("Schulsozialarbeit data successfully inserted")
 
 
     with open(os.path.join(settings.BASE_DIR, 'dataset/Jugendberufshilfen.geojson')) as f:
@@ -102,7 +101,7 @@ def run():
                                      telefon=telefon, fax=fax, email=email, lat=lat, long=long)
         youth_career_obj.save()
 
-    print("Successfully inserted youth career")
+    print("Jugendberufshilfen data successfully inserted")
 
 
     with open(os.path.join(settings.BASE_DIR, 'dataset/Kindertageseinrichtungen.geojson')) as f:
@@ -137,4 +136,4 @@ def run():
                               barrierefrei=barrierefrei, integrativ=integrativ, lat=lat, long=long)
         daycare_obj.save()
 
-    print("Successfully inserted day care")
+    print("Kindertageseinrichtungen data successfully inserted")
