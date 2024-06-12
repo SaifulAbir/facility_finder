@@ -10,7 +10,6 @@ class FeatureListAPIView(APIView):
     def get(self, request):
         feature_dict = {"school_list": None, "social_work_list": None, "youth_career_list": None, "daycare_list": None}
         category_list = request.GET.getlist("category[]")
-        print(category_list)
 
         for category in category_list:
             if category == "Schulen":
