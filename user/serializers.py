@@ -37,7 +37,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         refresh = self.get_token(self.user)
         data.update({'user_id': self.user.id,
                      'lifetime': int(refresh.access_token.lifetime.total_seconds())})
-        # and everything else you want to send in the response
         return data
 
 
@@ -45,16 +44,16 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email']
+        fields = ['id', 'first_name', 'last_name', 'email', 'street_house_number', 'city', 'state', 'lat', 'long']
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     favorite_facility = serializers.SerializerMethodField('favorite_facility_data')
-    home_address = serializers.SerializerMethodField('home_address_data')
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'favorite_facility', 'home_address', 'is_active']
+        fields = ['id', 'first_name', 'last_name', 'email', 'favorite_facility', 'street_house_number', 'city', 'state',
+                  'is_active', 'lat', 'long']
 
     def favorite_facility_data(self, obj):
         if obj.favorite_facility_category == "Kindertageseinrichtungen":
@@ -70,30 +69,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
             favorite_facility_obj = YouthCareer.objects.get(id=obj.favorite_facility_id)
             return YouthCareerListSerializer(favorite_facility_obj).data
 
-    def home_address_data(self, obj):
-        if obj.home_address_category == "Kindertageseinrichtungen":
-            home_address_obj = Daycare.objects.get(id=obj.home_address_id)
-            return DaycareListSerializer(home_address_obj).data
-        elif obj.home_address_category == "Schulen":
-            home_address_obj = School.objects.get(id=obj.home_address_id)
-            return SchoolListSerializer(home_address_obj).data
-        elif obj.home_address_category == "Schulsozialarbeit":
-            home_address_obj = SocialWork.objects.get(id=obj.home_address_id)
-            return SocialWorkListSerializer(home_address_obj).data
-        elif obj.home_address_category == "Jugendberufshilfen":
-            home_address_obj = YouthCareer.objects.get(id=obj.home_address_id)
-            return YouthCareerListSerializer(home_address_obj).data
-
 
 class ChangeFavoriteFacilitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
         fields = ('favorite_facility_id', 'favorite_facility_category')
-
-
-class ChangeHomeAddressSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('home_address_id', 'home_address_category')
